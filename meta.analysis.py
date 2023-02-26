@@ -33,7 +33,7 @@ if __name__ == "__main__":
     start_time=time.time()
     print(initial_message)
     args = parser.parse_args()
-    initial_logging(initial_log, vars(parser.parse_args()), vars(parser.parse_args([])), args.out + ".log", args.split, args.meta_summary, args.out)
+    initial_logging(initial_log, vars(parser.parse_args()), vars(parser.parse_args([])), args.out + ".log", args.split, args.meta_summary, args.meta_no_correction, args.out)
 
     if args.meta_summary:
         print('\nPerforming fixed-effect meta analysis with correction using summary statistics...\nSplit index is: %s' % args.split)

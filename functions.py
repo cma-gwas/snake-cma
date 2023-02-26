@@ -5,13 +5,13 @@ from scipy.stats import chi2
 import argparse
 import os
 
-def check_inputs():
-    assert args.split is not None, "Split Index is required.."
-    assert args.meta_summary or args.meta_no_correction, "Choose a flag for meta-analysis procedure. Currently avaiable options are: --meta_summary and --meta_no_correction."
-    assert args.out is not None, "Output path is required.."
+def check_inputs(args_split, args_meta_summary, args_out):
+    assert args_split is not None, "Split Index is required.."
+    assert args_meta_summary or args.meta_no_correction, "Choose a flag for meta-analysis procedure. Currently avaiable options are: --meta_summary and --meta_no_correction."
+    assert args_out is not None, "Output path is required.."
 
-def initial_logging(log, inputs, inputs_Null, output):
-    check_inputs()
+def initial_logging(log, inputs, inputs_Null, output, args_split, args_meta_summary, args_out):
+    check_inputs(args_split, args_meta_summary, args_out)
     with open(output, "w") as f:
         f.write(log % (datetime.datetime.now().strftime("%A - %d %B %Y - %H:%M:%S"), str(os.getcwd())))
         for i in inputs:

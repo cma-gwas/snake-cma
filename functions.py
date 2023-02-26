@@ -69,7 +69,7 @@ def compute_stats(weights, cov_matrix, beta_, se_, split_index_, df_):
     df_['SE'] = np.round(se_final_,6)
     df_['CHISQ'] = (np.array(df_['BETA'])/np.array(df_['SE']))**2
     df_['LOG10P'] = -1 * np.log10(chi2.sf(df_['CHISQ'], 1, loc=0, scale=1))
-    df_['P'] = -1 * np.log10(chi2.sf(df_['CHISQ'], 1, loc=0, scale=1))
+    df_['P'] = 10**((-1) * np.array(df_['LOG10P']))
     df_ = df_.set_index('CHROM')
     df_['CHISQ'] = df_['CHISQ'].apply('{:,.3e}'.format)
     df_ = df_[['GENPOS', 'ID', 'ALLELE0', 'ALLELE1', 'A1FREQ', 'BETA', 'SE', 'CHISQ', 'LOG10P', 'P']]

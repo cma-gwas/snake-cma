@@ -80,7 +80,7 @@ def meta_nocorrection(path_prefix_, split_index_):
     if split_index_ == 1:
         df_ = pd.read_csv(path_prefix_ % 1, usecols= ['CHROM','GENPOS', 'ID', 'ALLELE0', 'ALLELE1', 'A1FREQ', 'BETA', 'SE', 'CHISQ', 'LOG10P'], sep=" ", header=0)
         df_ = df_.set_index('CHROM')
-        df_['P'] = -1 * np.log10(chi2.sf(df_['CHISQ'], 1, loc=0, scale=1))
+        df_['P'] = 10**((-1) * np.array(df_['LOG10P']))
         return df_
     else:
         beta_,se_,df_ = import_results(path_prefix_, split_index_)
@@ -99,7 +99,7 @@ def meta_summary(path_prefix_, split_index_):
     if split_index_ == 1:
         df_ = pd.read_csv(path_prefix_ % 1, usecols= ['CHROM','GENPOS', 'ID', 'ALLELE0', 'ALLELE1', 'A1FREQ', 'BETA', 'SE', 'CHISQ', 'LOG10P'], sep=" ", header=0)
         df_ = df_.set_index('CHROM')
-        df_['P'] = -1 * np.log10(chi2.sf(df_['CHISQ'], 1, loc=0, scale=1))
+        df_['P'] = 10**((-1) * np.array(df_['LOG10P']))
         return df_
     else:
         beta_,se_,df_ = import_results(path_prefix_, split_index_)

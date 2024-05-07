@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from math import sqrt
 from scipy.stats import chi2
+from scipy.special import chdtri
 import argparse
 import os
 import time
@@ -113,4 +114,45 @@ def meta_summary(path_prefix_, split_index_):
         print('Weights computed..')
         return compute_stats(weights_, cov_matrix_, beta_, se_, split_index_, df_)
 
+def compute_stats_inflated(weights, cov_matrix, beta_, se_, split_index_, df_, her_est, is_disease):
+    beta_final_ = np.matmul(beta_.reshape(-1,1,split_index_),weights).reshape(-1,1)
+    se_final_ = np.sqrt(np.matmul(np.matmul(weights.transpose(0,2,1),cov_matrix),weights).reshape(-1,1))
+    df_['BETA'] = np.round(beta_final_,6)
+    df_['SE'] = np.round(se_final_,6)
+    df_['CHISQ'] = (np.array(df_['BETA'])/np.array(df_['SE']))**2    
+    df_['LOG10P'] = -1 * np.log10(chi2.sf(df_['CHISQ'], 1, loc=0, scale=1))
+    df_['P'] = 10**((-1) * np.array(df_['LOG10P']))
+    df_ = df_.set_index('CHROM')
+    df_['CHISQ-2'] = df_['CHISQ'] / (chdtri(1, np.median(df_['P']))/0.456)
+    if is_disease == 1:
+        alpha = np.maximum(1,her_est+0.85)
+    else:
+        alpha = np.maximum(1,her_est+0.95)    
+    df_['CHISQ-Inflated'] = df_['CHISQ-2'] * alpha
+    df_['LOG10P-Inflated'] = -1 * np.log10(chi2.sf(df_['CHISQ-Inflated'], 1, loc=0, scale=1))
+    df_['P-Inflated'] = 10**((-1) * np.array(df_['LOG10P-Inflated']))
+    df_ = df_.drop(columns=['CHISQ-2'])
+    df_['CHISQ'] = df_['CHISQ'].apply('{:,.3e}'.format)
+    df_['CHISQ-Inflated'] = df_['CHISQ-Inflated'].apply('{:,.3e}'.format)
+    df_ = df_[['GENPOS', 'ID', 'ALLELE0', 'ALLELE1', 'A1FREQ', 'BETA', 'SE', 'CHISQ', 'LOG10P', 'P', 'CHISQ-Inflated', 'LOG10P-Inflated', 'P-Inflated']]
+    print('Done..')
+    return df_
+
+def meta_summary_inflated(path_prefix_, split_index_, her_est, is_disease):
+    if split_index_ == 1:
+        df_ = pd.read_csv(path_prefix_ % 1, usecols= ['CHROM','GENPOS', 'ID', 'ALLELE0', 'ALLELE1', 'A1FREQ', 'BETA', 'SE', 'CHISQ', 'LOG10P'], sep=" ", header=0)
+        df_ = df_.set_index('CHROM')
+        df_['P'] = 10**((-1) * np.array(df_['LOG10P']))
+        return df_
+    else:
+        beta_,se_,df_ = import_results(path_prefix_, split_index_)
+        print('Results are imported..')
+        corr_matrix_ = compute_cor_summary(beta_,se_)
+        print('Correlation Matrix is computed..')
+        cov_matrix_ = compute_cov(corr_matrix_, se_)
+        print('Covariance Matrix is computed..')
+        del corr_matrix_
+        weights_ = compute_weights(cov_matrix_, se_, split_index_)
+        print('Weights computed..')
+        return compute_stats_inflated(weights_, cov_matrix_, beta_, se_, split_index_, df_, her_est, is_disease)
 

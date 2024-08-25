@@ -4,14 +4,14 @@ snake-cma is the implementation of the Corrected Meta-Analysis (CMA) method on S
 
 It is developed and supported by team of scientists at the University of Edinburgh.
 
-The method has the following features:
+It has the following features:
 - It works for quantitative and binary traits, inheriting unique features of the extended method
 - It is efficient; faster and using much less memory that existing GWAS software, suitable for very large sample sizes (> 1M)
 - It can handle relatedness with large populations
 
-There are currently two implementations:
-- R+CMA, an implementation based on [REGENIE](https://rgcgithub.github.io/regenie)
-- F+CMA: an implementation based on [fastGWA-GLMM](https://yanglab.westlake.edu.cn/software/gcta)
+It currently extends two existing methods:
+- R+CMA, which uses [REGENIE](https://rgcgithub.github.io/regenie)
+- F+CMA, which uses [fastGWA-GLMM](https://yanglab.westlake.edu.cn/software/gcta)
 
 
 ## Quick start

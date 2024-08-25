@@ -1,26 +1,29 @@
 import os
+import sys
 from snakemake.logging import logger
 
 # Mandatory environment vars
 envvars:
-    "PROG_PARENT_DIR",
-    "META_WORKDIR",
+    "PLINK_PATH",
+    "REGENIE_PATH",
+    "CMA_PATH",
+    "SPLITTER_PATH",
+    "WORKDIR",
     "INPUT_PREFIX",
-    "PHENO_FILE"
-
-## PARENT DIRECTORY ##
-PARENT_DIR = os.getenv("PROG_PARENT_DIR")
+    "PHENO_FILE",
 
 ## TOOLS ##
-PLINK2 = PARENT_DIR + "/prog/plink2"
-REGENIE = PARENT_DIR + "/prog/regenie"
-META_PROG = PARENT_DIR + "/git-uoe/meta-analysis/meta.analysis.py"
-SPLIT_PROG = PARENT_DIR + "/git-uoe/spark-meta/snakemake/cohort_splitter.py"
-COUNTER_SERVER_PROG = PARENT_DIR + "/git-uoe/spark-meta/snakemake/generic/counter_server.py"
+PLINK2 = os.getenv("PLINK_PATH")
+REGENIE = os.getenv("REGENIE_PATH")
+#META_PROG = PARENT_DIR + "/git-uoe/meta-analysis/meta.analysis.py"
+META_PROG = os.getenv("CMA_PATH")
+#SPLIT_PROG = PARENT_DIR + "/git-uoe/spark-meta/snakemake/cohort_splitter.py"
+SPLIT_PROG = os.getenv("SPLITTER_PATH")
+#COUNTER_SERVER_PROG = PARENT_DIR + "/git-uoe/spark-meta/snakemake/generic/counter_server.py"
 
 # MANDATORY PARAMETERS
 BED_PREFIX = os.getenv("INPUT_PREFIX")
-OUT_DIR = os.getenv("META_WORKDIR")
+OUT_DIR = os.getenv("WORKDIR")
 PHENO = os.getenv("PHENO_FILE")
 
 # OPTIONAL PARAMETERS
@@ -131,7 +134,7 @@ QC_PREFIX = OUT_DIR + "/qc_pass"
 # Phenotype names in the phenotype file
 import pandas as pd
 
-phen_headers = pd.read_csv(PHENO,index_col=False,nrows=0,delim_whitespace=True).columns.tolist()
+phen_headers = pd.read_csv(PHENO, index_col=False, nrows=0, sep="\s+").columns.tolist()
 #NUM_PHENO = len(phen_headers) - 2
 PHEN_IDS = phen_headers[2:]
 

@@ -3,24 +3,24 @@ from snakemake.logging import logger
 
 # Mandatory environment vars
 envvars:
-    "PROG_PARENT_DIR",
-    "META_WORKDIR",
+    "PLINK_PATH",
+    "GCTA_PATH",
+    "CMA_PATH",
+    "SPLITTER_PATH",
+    "WORKDIR",
     "INPUT_PREFIX",
     "PHENO_FILE",
 
-## PARENT DIRECTORY ##
-PARENT_DIR = os.getenv("PROG_PARENT_DIR")
-
-## TOOLS ##
-PLINK2 = PARENT_DIR + "/prog/plink2"
-GCTA = PARENT_DIR + "/prog/gcta64"
-META_PROG = PARENT_DIR + "/git-uoe/meta-analysis/meta.analysis.py"
-SPLIT_PROG = PARENT_DIR + "/git-uoe/spark-meta/snakemake/cohort_splitter.py"
-COUNTER_SERVER_PROG = PARENT_DIR + "/git-uoe/spark-meta/snakemake/generic/counter_server.py"
+## TOOLS
+PLINK2 = os.getenv("PLINK_PATH")
+GCTA = os.getenv("GCTA_PATH")
+META_PROG = os.getenv("CMA_PATH")
+SPLIT_PROG = os.getenv("SPLITTER_PATH")
+#COUNTER_SERVER_PROG = PARENT_DIR + "/git-uoe/spark-meta/snakemake/generic/counter_server.py"
 
 # MANDATORY PARAMETERS
 BED_PREFIX = os.getenv("INPUT_PREFIX")
-OUT_DIR = os.getenv("META_WORKDIR")
+OUT_DIR = os.getenv("WORKDIR")
 PHENO = os.getenv("PHENO_FILE")
 
 # OPTIONAL PARAMETERS
@@ -218,8 +218,8 @@ rule split_sample_ids:
 rule step_one:
     input:
         bed=BED,
-        id=QC_PREFIX + ".id.split.{subcohort_id}",
-        grm=GRM_FILE_PREFIX + ".grm.bin"
+        id=QC_PREFIX + ".id.split.{subcohort_id}"
+        #grm=GRM_FILE_PREFIX + ".grm.bin"
     output:
         sp_grm=S1_OUT_PREFIX + '{subcohort_id}' + SP_GRM_FILE_SUFFIX,
         sp_grm_id=S1_OUT_PREFIX + '{subcohort_id}' + SP_GRM_ID_FILE_SUFFIX
@@ -229,14 +229,23 @@ rule step_one:
     run:
         # Reuse sp_grm when provided
         sp_grm_exists = False
-        if SP_GRM_FILE_PREFIX:
-            sp_grm_file = SP_GRM_FILE_PREFIX + wildcards.subcohort_id + SP_GRM_FILE_SUFFIX
+
+        sp_grm_whole_file = SP_GRM_FILE_PREFIX + SP_GRM_FILE_SUFFIX
+        sp_grm_file = SP_GRM_FILE_PREFIX + wildcards.subcohort_id + SP_GRM_FILE_SUFFIX
+        if os.path.isfile(sp_grm_file):
+            #sp_grm_file = SP_GRM_FILE_PREFIX + wildcards.subcohort_id + SP_GRM_FILE_SUFFIX
             sp_grm_id_file = SP_GRM_FILE_PREFIX + wildcards.subcohort_id + SP_GRM_ID_FILE_SUFFIX
-            if os.path.isfile(sp_grm_file) and os.path.isfile(sp_grm_id_file):
-                print("Linking sp_grm file {}->{}".format(sp_grm_file, output[0]))
+            #if os.path.isfile(sp_grm_file) and os.path.isfile(sp_grm_id_file):
+            if os.path.isfile(sp_grm_id_file):
+                print("Linking sp   _grm file {}->{}".format(sp_grm_file, output[0]))
                 shell("ln -s {sp_grm_file} {output.sp_grm}")
                 shell("ln -s {sp_grm_id_file} {output.sp_grm_id}")
                 sp_grm_exists = True
+        elif os.path.isfile(sp_grm_whole_file):
+            print("Linking sp_grm file {}->{}".format(sp_grm_whole_file, output[0]))
+            shell("ln -s {sp_grm_whole_file} {output.sp_grm}")
+            shell("ln -s {input.id} {output.sp_grm_id}")
+            sp_grm_exists = True
 
         if not sp_grm_exists:
             cpu_list = get_sub_cpulist(wildcards.subcohort_id)

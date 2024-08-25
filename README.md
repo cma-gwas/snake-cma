@@ -4,8 +4,6 @@ Corrected Meta-Analysis (CMA) is a resource-efficient method for genome-wide ass
 
 snake-cma is CMA implementations on Snakemake.  
 
-It is developed and supported by team of scientists at the University of Edinburgh.
-
 It has the following features:
 - It is efficient; faster and using much less memory that existing methods, suitable for very large sample sizes (> 1M)
 - It works for quantitative and binary traits, inheriting unique features of the extended method

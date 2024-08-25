@@ -1,6 +1,6 @@
 # snake-cma
 
-snake-cma is Snakemake implementations for the Corrected Meta-Analysis (CMA) method.
+snake-cma is the implementation of the Corrected Meta-Analysis (CMA) method on Snakemake.
 
 It is developed and supported by team of scientists at the University of Edinburgh.
 

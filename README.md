@@ -10,8 +10,8 @@ It has the following features:
 - It can handle relatedness with large populations
 
 It currently extends two existing methods:
-- R+CMA, which uses [REGENIE](https://rgcgithub.github.io/regenie)
-- F+CMA, which uses [fastGWA-GLMM](https://yanglab.westlake.edu.cn/software/gcta)
+- R+CMA, which uses [REGENIE](https://rgcgithub.github.io/regenie) for quantitative and binary traits
+- F+CMA, which uses [fastGWA-GLMM](https://yanglab.westlake.edu.cn/software/gcta) for binary traits
 
 
 ## Quick start

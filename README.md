@@ -19,7 +19,8 @@ It currently supports and extends two existing methods:
 - Download the source  
 `$ git clone https://git.ecdf.ed.ac.uk/cma/snake-cma.git`
 - Install dependencies  
-`$ pip install snake-cma/requirements.txt`
+`$ pip install snake-cma/requirements.txt`  
+CMA also needs [PLINK](https://www.cog-genomics.org/plink/2.0/) and [REGENIE](https://rgcgithub.github.io/regenie/install/)/[GCTA](https://yanglab.westlake.edu.cn/software/gcta/#Download) program binaries. See --plink, -rcma, and --fcma flags.
 - Run the main program  
 `$ python snake-cma/src/snake_cma.py`
 
@@ -44,12 +45,14 @@ options:
   --sp-grm SP_GRM       sparse GRM path prefix for F+CMA
   --grm GRM             GRM path prefix for F+CMA, sparse GRM will be computed
   --plink PLINK         PLINK2 path for running F+CMA
-  --ncores NCORES       number of cores to use
   -s SPLIT, --split SPLIT
                         number of sub-cohorts for splitting
   --bt                  binary trait analysis, default=false
   --cma-inflate CMA_INFLATE
-                        CMA's inflation factor, default=0.2
+                        CMA inflation factor, default=0.2
+  --ncores NCORES       number of cores to use
+  --s-parallel S_PARALLEL
+                        number of sub-cohorts in parallel, default=--split
 
 ```
 

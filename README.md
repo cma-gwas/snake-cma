@@ -32,7 +32,7 @@ run CMA on Snakemake
 
 options:
   -h, --help            show this help message and exit
-  -bed BED, --bed BED   input bed prefix
+  -bed BED, --bed BED   input genetic data, PLINK bed/bim/fam prefix
   -out OUT, --out OUT   output prefix
   -phen PHENOFILE, --phenoFile PHENOFILE
                         phenotype file

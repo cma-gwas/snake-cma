@@ -32,6 +32,7 @@ S2_ARGS = os.getenv("STEP2_ARGS")
 S1_SNPLIST = os.getenv("STEP1_SNPLIST")
 S1_PRED_FILE_PREFIX = os.getenv("STEP1_PRED_FILE_PREFIX")
 OVERLAP_CASE_SAMPLES = os.getenv("OVERLAP_CASE_SAMPLES", '')
+CMA_INFLATE = os.getenv("CMA_INFLATE", "0.2")
 
 S1_PRED_FILE_SUFFIX = "_pred.list"
 extra_args = ""
@@ -310,6 +311,8 @@ rule meta_analysis:
     output:
         META_OUT_PREFIX + '{phen_id}.meta'
     threads: meta_nthreads
+    params:
+        inflate = float(CMA_INFLATE)
     shell:
-        "/usr/bin/time -v -o {META_OUT_PREFIX}{wildcards.phen_id}.time python {META_PROG} --meta_summary {S2_OUT_PREFIX}%s_{wildcards.phen_id}.regenie --split {NUM_SPLITS} --inflate 0.2 --out {META_OUT_PREFIX}{wildcards.phen_id}"
+        "/usr/bin/time -v -o {META_OUT_PREFIX}{wildcards.phen_id}.time python {META_PROG} --meta_summary {S2_OUT_PREFIX}%s_{wildcards.phen_id}.regenie --split {NUM_SPLITS} --inflate {params.inflate} --out {META_OUT_PREFIX}{wildcards.phen_id}"
 

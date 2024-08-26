@@ -20,7 +20,7 @@ It currently supports and extends two existing methods:
 `$ git clone https://git.ecdf.ed.ac.uk/cma/snake-cma.git`
 - Install dependencies  
 `$ pip install snake-cma/requirements.txt`  
-CMA also needs [PLINK](https://www.cog-genomics.org/plink/2.0/) and [REGENIE](https://rgcgithub.github.io/regenie/install/)/[GCTA](https://yanglab.westlake.edu.cn/software/gcta/#Download) program binaries. See --plink, -rcma, and --fcma flags.
+CMA also needs [PLINK](https://www.cog-genomics.org/plink/2.0/) and [REGENIE](https://rgcgithub.github.io/regenie/install/)/[GCTA](https://yanglab.westlake.edu.cn/software/gcta/#Download) program binaries. See --plink, -rcma, and -fcma flags.
 - Run the main program  
 `$ python snake-cma/src/snake_cma.py`
 

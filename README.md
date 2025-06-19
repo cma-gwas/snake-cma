@@ -2,10 +2,10 @@
 
 Corrected Meta-Analysis (CMA) is a resource-efficient method for genome-wide association studies (GWAS) on large populations.
 
-snake-cma is CMA implementations on Snakemake.  
+**snake-cma** is the CMA implementation on Snakemake.  
 
 It has the following features:
-- It is efficient; faster and using much less memory that existing methods, suitable for very large sample sizes (> 1M)
+- It is efficient; faster and using much less memory than existing methods, suitable for very large sample sizes (> 1M)
 - It works for quantitative and binary traits, inheriting unique features of the extended method
 - It can handle relatedness with large populations
 
@@ -21,7 +21,7 @@ It currently supports and extends two existing methods:
   1. Create a [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/installing-with-conda.html) environment using the provided environment.yml      
   `$ conda env create -f snake-cma/environment.yml`  
   `$ conda activate snake-cma`
-  2. Use [Pip](https://packaging.python.org/en/latest/tutorials/installing-packages/) to install dependencies (**Python>=3.11** are supported)  
+  2. Use [Pip](https://packaging.python.org/en/latest/tutorials/installing-packages/) to install dependencies (**Python≥3.11** are supported)  
   `$ pip install -r snake-cma/requirements.txt`  
   > CMA also needs [PLINK](https://www.cog-genomics.org/plink/2.0/) and [REGENIE](https://rgcgithub.github.io/regenie/install/)/[GCTA](https://yanglab.westlake.edu.cn/software/gcta/#Download) program binaries. See --plink, -rcma, and -fcma flags.
 - Run the main program:  

@@ -33,6 +33,7 @@ S1_SNPLIST = os.getenv("STEP1_SNPLIST")
 S1_PRED_FILE_PREFIX = os.getenv("STEP1_PRED_FILE_PREFIX")
 OVERLAP_CASE_SAMPLES = os.getenv("OVERLAP_CASE_SAMPLES", '')
 CMA_INFLATE = os.getenv("CMA_INFLATE", "0.2")
+FORCE_STEP1 = os.getenv("FORCE_STEP1", "false")
 
 S1_PRED_FILE_SUFFIX = "_pred.list"
 extra_args = ""
@@ -71,6 +72,9 @@ if SNP_LIST:
 
 if S1_SNPLIST:
     s1_extra_args += " --extract {}".format(S1_SNPLIST)
+
+if FORCE_STEP1.lower() == "true":
+    s1_extra_args += " --force-step1"
 
 NUM_SPLITS = os.getenv("META_N_SPLITS")
 if NUM_SPLITS:

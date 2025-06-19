@@ -4,8 +4,8 @@ import argparse
 import subprocess
 
 import psutil
-from snakemake import api
-from snakemake import settings
+#from snakemake import api
+#from snakemake import settings
 from pathlib import Path
 
 this_dir = os.path.abspath(os.path.dirname(__file__))
@@ -18,7 +18,7 @@ counter_server = os.path.join(this_dir, "sched", "counter_server.py")
 def main():
     parser = argparse.ArgumentParser(description='run CMA on Snakemake', usage='''snake_cma.py  [<options> ...]''')
 
-    parser.add_argument('-bed', '--bed', type=str, help='input bed prefix')
+    parser.add_argument('-bed', '--bed', type=str, help='input bed prefix', required=True)
     parser.add_argument('-out', '--out', type=str, help='output prefix', required=True)
     parser.add_argument('-phen', '--phenoFile', type=str, help='phenotype file', required=True)
     parser.add_argument('-covar', '--covarFile', type=str, help='covariate file')
@@ -34,6 +34,7 @@ def main():
                         default=psutil.cpu_count(logical=False))
     parser.add_argument('--s-parallel', type=int,
                         help='number of sub-cohorts in parallel, default=--split')
+    parser.add_argument('--rcma-force-step1', action="store_true", help='REGENIE --force-step1, default=false')
 
     args = parser.parse_args()
 
@@ -54,6 +55,7 @@ def main():
 
     if args.regenie:
         os.environ["REGENIE_PATH"] = args.regenie
+        os.environ["FORCE_STEP1"] = str(args.rcma_force_step1)
         snakefile = rcma_snakefile
     elif args.gcta and (args.sp_grm or args.grm) and args.bt:
         os.environ["GCTA_PATH"] = args.gcta
@@ -84,18 +86,25 @@ def main():
     if args.s_parallel:
         os.environ["META_NUM_PARALLEL"] = str(args.s_parallel)
 
-    # Run workflow
-    with api.SnakemakeApi(
-        settings.OutputSettings(
+    # Run the workflow using Snakemake API
+    from snakemake.api import (
+        OutputSettings,
+        ResourceSettings,
+        SnakemakeApi,
+        StorageSettings,
+    )
+
+    with SnakemakeApi(
+        OutputSettings(
             verbose=False,
             show_failed_logs=True,
         )
     ) as snakemake_api:
-        rs = settings.ResourceSettings(
+        rs = ResourceSettings(
             cores=args.ncores,
         )
         workflow_api = snakemake_api.workflow(
-            storage_settings=settings.StorageSettings(),
+            storage_settings=StorageSettings(),
             resource_settings=rs,
             snakefile=Path(snakefile),
             workdir=Path(args.out),
